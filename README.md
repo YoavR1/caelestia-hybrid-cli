@@ -1,6 +1,29 @@
-# MiDnight cli
+# Caelestia Hybrid CLI
 
-The main control script for the MiDnight dotfiles.
+The control script for [Caelestia Hybrid](https://github.com/YoavR1/caelestia-hybrid),
+a single merged Quickshell desktop shell combining MiDnight Shell and OP-Caelestia on top of
+upstream Caelestia.
+
+It installs the binary as `caelestia`, so it cannot be installed alongside `caelestia-cli` or
+`midnight-cli` -- that is the whole reason this fork exists rather than a plugin.
+
+## Lineage
+
+This is a fork of [`dim-ghub/midnight-cli`](https://github.com/dim-ghub/midnight-cli), which is
+itself a fork of [`caelestia-dots/cli`](https://github.com/caelestia-dots/cli). MiDnight's
+history contains all of upstream's, so this repository carries the full 741-commit history of
+both and neither is vendored or squashed. Both are configured as remotes:
+
+```sh
+git remote -v
+# caelestia  https://github.com/caelestia-dots/cli
+# midnight   https://github.com/dim-ghub/midnight-cli
+```
+
+Upstream is merged, never rebased onto, matching the shell repository's rule.
+
+All three projects are GPL-3.0. Authorship and history are preserved.
+
 
 <details><summary id="dependencies">External dependencies</summary>
 
