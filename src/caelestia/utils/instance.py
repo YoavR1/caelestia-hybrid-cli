@@ -24,6 +24,7 @@ Resolution order, first match wins:
 """
 
 import os
+import subprocess
 
 DEFAULT_CONFIG = "caelestia"
 
@@ -51,3 +52,27 @@ def describe() -> str:
     """Human-readable description of the instance being addressed."""
     flag, value = selector()
     return f"path {value}" if flag == "-p" else f"config {value!r}"
+
+
+def run(*args: str) -> str:
+    """Run a ``qs`` command against the shell, failing with a legible message.
+
+    ``subprocess.check_output`` raises ``CalledProcessError``, and nothing up the
+    stack catches it, so the previous behaviour for the ordinary case of "the
+    shell is not running" was a Python traceback ending in ``exit status 255``.
+    That is the same information as "no running instances", spelled so it reads
+    like a bug in the CLI.
+    """
+    try:
+        return subprocess.check_output(qs(*args), text=True, stderr=subprocess.STDOUT)
+    except FileNotFoundError:
+        raise SystemExit("qs (quickshell) is not installed, or is not on PATH") from None
+    except subprocess.CalledProcessError as e:
+        detail = (e.output or "").strip().splitlines()
+        first = next((line for line in detail if line.strip()), "")
+        raise SystemExit(
+            f"could not reach the shell at {describe()}"
+            + (f": {first}" if first else "")
+            + "\n\nSet CAELESTIA_SHELL_PATH to a checkout, or CAELESTIA_SHELL_CONFIG to a"
+            "\nconfig name, if the shell is running somewhere other than the default."
+        ) from None

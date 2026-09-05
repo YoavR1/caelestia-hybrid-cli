@@ -54,7 +54,7 @@ class Command:
                             print(line, end="")
 
     def shell(self, *args: str) -> str:
-        return subprocess.check_output(instance.qs(*args), text=True)
+        return instance.run(*args)
 
     def filter_log(self, line: str) -> bool:
         return f"Cannot open: file://{c_cache_dir}/imagecache/" not in line

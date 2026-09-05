@@ -56,6 +56,30 @@ class CommandTest(unittest.TestCase):
             self.assertIn("caelestia", instance.describe())
 
 
+class RunTest(unittest.TestCase):
+    """A shell that is not running is an ordinary situation, not a crash."""
+
+    def test_a_missing_instance_exits_with_a_message_not_a_traceback(self) -> None:
+        err = subprocess.CalledProcessError(255, ["qs"], output="No running instances for x\n")
+        with mock.patch("subprocess.check_output", side_effect=err):
+            with mock.patch.dict("os.environ", {"CAELESTIA_SHELL_PATH": "/tmp/s"}, clear=True):
+                with self.assertRaises(SystemExit) as caught:
+                    instance.run("ipc", "show")
+        message = str(caught.exception)
+        self.assertIn("/tmp/s", message)
+        self.assertIn("No running instances", message)
+
+    def test_a_missing_qs_binary_is_named(self) -> None:
+        with mock.patch("subprocess.check_output", side_effect=FileNotFoundError):
+            with self.assertRaises(SystemExit) as caught:
+                instance.run("ipc", "show")
+        self.assertIn("quickshell", str(caught.exception))
+
+    def test_output_is_returned_unchanged_on_success(self) -> None:
+        with mock.patch("subprocess.check_output", return_value="ok\n"):
+            self.assertEqual(instance.run("ipc", "show"), "ok\n")
+
+
 class CallSiteTest(unittest.TestCase):
     """No subcommand may spell out the selector itself again."""
 
