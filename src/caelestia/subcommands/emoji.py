@@ -3,6 +3,7 @@ import subprocess
 from argparse import Namespace
 from urllib.request import urlopen
 
+from caelestia.utils import instance
 from caelestia.utils.paths import cli_data_dir
 
 
@@ -19,7 +20,7 @@ class Command:
             self.fetch_emojis()
         else:
             subprocess.Popen(
-                ["qs", "-c", "caelestia", "ipc", "call", "launcher", "openEmoji"],
+                instance.ipc("launcher", "openEmoji"),
                 start_new_session=True,
             )
 

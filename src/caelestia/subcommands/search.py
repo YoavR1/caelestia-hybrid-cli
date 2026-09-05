@@ -1,6 +1,8 @@
 import json
 import subprocess
 import time
+
+from caelestia.utils import instance
 from argparse import Namespace
 from pathlib import Path
 
@@ -19,7 +21,7 @@ class Command:
         SEARCH_DONE.unlink(missing_ok=True)
 
         subprocess.Popen(
-            ["qs", "-c", "caelestia", "ipc", "call", "picker", "openSearch"],
+            instance.ipc("picker", "openSearch"),
             start_new_session=True,
         )
 

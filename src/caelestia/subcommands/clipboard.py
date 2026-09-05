@@ -1,4 +1,6 @@
 import subprocess
+
+from caelestia.utils import instance
 from argparse import Namespace
 
 
@@ -16,6 +18,6 @@ class Command:
             subprocess.run(["cliphist", "delete"], input=chosen)
         else:
             subprocess.Popen(
-                ["qs", "-c", "caelestia", "ipc", "call", "launcher", "openClipboard"],
+                instance.ipc("launcher", "openClipboard"),
                 start_new_session=True,
             )

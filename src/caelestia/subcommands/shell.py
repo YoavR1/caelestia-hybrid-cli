@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 from argparse import Namespace
 
+from caelestia.utils import instance
 from caelestia.utils.paths import c_cache_dir
 
 
@@ -37,7 +38,7 @@ class Command:
                 pass
 
             # Start the shell
-            args = ["qs", "-c", "caelestia", "-n"]
+            args = instance.qs("-n")
             if self.args.log_rules:
                 args.extend(["--log-rules", self.args.log_rules])
             if self.args.daemon:
@@ -53,7 +54,7 @@ class Command:
                             print(line, end="")
 
     def shell(self, *args: str) -> str:
-        return subprocess.check_output(["qs", "-c", "caelestia", *args], text=True)
+        return subprocess.check_output(instance.qs(*args), text=True)
 
     def filter_log(self, line: str) -> bool:
         return f"Cannot open: file://{c_cache_dir}/imagecache/" not in line

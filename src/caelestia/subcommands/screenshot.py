@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from caelestia.utils import hypr
+from caelestia.utils import instance
 from caelestia.utils.notify import notify
 from caelestia.utils.paths import get_config, screenshots_cache_dir, screenshots_dir
 
@@ -178,7 +179,7 @@ class Command:
     def region(self) -> None:
         if self.args.region == "slurp":
             subprocess.run(
-                ["qs", "-c", "caelestia", "ipc", "call", "picker", "openFreeze" if self.args.freeze else "open"]
+                instance.ipc("picker", "openFreeze" if self.args.freeze else "open")
             )
         else:
             sc_data = subprocess.check_output(["grim", "-l", "0", "-g", self.args.region.strip(), "-"])
